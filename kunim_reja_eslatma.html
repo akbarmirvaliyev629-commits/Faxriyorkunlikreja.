@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#101827">
+<title>Kunim — Reja va eslatmalar</title>
+<style>
+:root{--bg:#0b1220;--panel:#121d30;--panel2:#18263d;--text:#eef4ff;--muted:#9fb0c9;--accent:#6ee7b7;--line:#2a3a54;--danger:#ff9b9b}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(145deg,#0b1220,#101b2e 60%,#102c32);color:var(--text);font:16px/1.5 system-ui,-apple-system,Segoe UI,sans-serif;min-height:100vh}
+.wrap{max-width:900px;margin:auto;padding:22px 16px 60px}.hero{padding:22px 0 14px}.tag{color:var(--accent);font-weight:700;letter-spacing:.12em;text-transform:uppercase;font-size:.75rem}
+h1{font-size:clamp(2rem,7vw,3.2rem);line-height:1.08;margin:8px 0 12px}.sub{color:var(--muted);max-width:650px}
+.row{display:grid;grid-template-columns:1.15fr .85fr;gap:16px;margin-top:18px}.card{background:rgba(18,29,48,.94);border:1px solid var(--line);border-radius:20px;padding:18px;box-shadow:0 16px 36px #0002}
+h2{font-size:1.1rem;margin:0 0 12px}.date{color:var(--muted);font-size:.92rem}.progress{height:8px;background:#26364e;border-radius:99px;overflow:hidden;margin:12px 0 6px}.bar{height:100%;width:0;background:var(--accent);transition:width .2s}.small{font-size:.88rem;color:var(--muted)}
+.task{display:flex;align-items:flex-start;gap:12px;padding:13px 0;border-bottom:1px solid var(--line)}.task:last-child{border-bottom:0}.task input[type=checkbox]{width:20px;height:20px;accent-color:#6ee7b7;margin-top:3px;flex-shrink:0}.taskmain{flex:1}.taskname{font-weight:650}.task.done .taskname{text-decoration:line-through;color:var(--muted)}.time{font-size:.83rem;color:var(--accent);margin-top:3px}.pill{font-size:.72rem;border:1px solid var(--line);border-radius:99px;padding:3px 8px;color:var(--muted);white-space:nowrap}
+button,input,select{font:inherit}button{cursor:pointer;border:0;border-radius:12px;padding:10px 14px;background:var(--accent);color:#082219;font-weight:750}button.secondary{background:var(--panel2);border:1px solid var(--line);color:var(--text)}button.danger{background:#3b2028;color:#ffd8d8;border:1px solid #71404a}
+.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}.field{display:grid;gap:6px;margin:10px 0}.field label{font-size:.87rem;color:var(--muted)}input[type=text],input[type=time],select{width:100%;background:#0d1727;border:1px solid var(--line);border-radius:10px;padding:10px 11px;color:var(--text)}
+.formgrid{display:grid;grid-template-columns:1fr 130px;gap:10px}.notice{background:#182c35;border:1px solid #285748;border-radius:12px;padding:12px;color:#d8ffef;font-size:.9rem;margin-top:12px}
+.empty{color:var(--muted);padding:16px 0}.foot{color:var(--muted);font-size:.82rem;text-align:center;margin-top:22px}
+@media(max-width:700px){.row{grid-template-columns:1fr}.wrap{padding:16px 12px 40px}.card{padding:15px}.formgrid{grid-template-columns:1fr 110px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <div class="tag">Kichik qadamlar · katta natijalar</div>
+    <h1>Kunim<span style="color:var(--accent)">.</span></h1>
+    <p class="sub">Universitet, dasturlash va kiberxavfsizlikni tartibga sol. Bugun hammasini mukammal qilish shart emas — rejangdagi bitta ishni boshlasang ham bo‘ladi.</p>
+    <div class="date" id="today"></div>
+  </header>
+
+  <div class="row">
+    <section class="card">
+      <h2>🎯 Bugungi reja</h2>
+      <div id="progressText" class="small">0 ta vazifa bajarildi</div>
+      <div class="progress"><div class="bar" id="bar"></div></div>
+      <div id="tasks"></div>
+      <div class="actions">
+        <button id="notifyBtn">🔔 Eslatmalarni yoqish</button>
+        <button class="secondary" id="resetBtn">Bugungi rejani tiklash</button>
+      </div>
+      <div class="notice" id="notice">Eslatma: brauzer bildirishnomalariga ruxsat ber. Vaqtida eslatish uchun sahifa ochiq turishi kerak.</div>
+    </section>
+
+    <aside>
+      <section class="card">
+        <h2>➕ Vazifa qo‘shish</h2>
+        <form id="addForm">
+          <div class="field"><label for="taskName">Nima qilmoqchisan?</label><input id="taskName" type="text" placeholder="Masalan: Python mashqi" required maxlength="90"></div>
+          <div class="formgrid">
+            <div class="field"><label for="taskTime">Eslatma vaqti</label><input id="taskTime" type="time" value="16:00" required></div>
+            <div class="field"><label for="category">Yo‘nalish</label><select id="category"><option>O‘qish</option><option>Dasturlash</option><option>Kiberxavfsizlik</option><option>Dam olish</option><option>Boshqa</option></select></div>
+          </div>
+          <button type="submit">Vazifa qo‘shish</button>
+        </form>
+      </section>
+      <section class="card" style="margin-top:16px">
+        <h2>🧭 Senga tavsiya</h2>
+        <p style="margin:0 0 10px">1. Avval universitet darslarini bajar.</p>
+        <p style="margin:0 0 10px">2. Har kuni 60 daqiqa kodni tushunib o‘rgan.</p>
+        <p style="margin:0 0 10px">3. Keyin 30 daqiqa o‘zing mustaqil kod yoz.</p>
+        <p style="margin:0">4. Haftada bir marta kichik loyihangni yaxshila.</p>
+      </section>
+    </aside>
+  </div>
+  <p class="foot">Vazifalar shu brauzerda saqlanadi. Brauzer ma’lumotlarini tozalasang, saqlangan vazifalar o‘chishi mumkin.</p>
+</div>
+<script>
+const defaultTasks = [
+ {id:'uni',name:'Universitet darslari va topshiriqlar',time:'08:00',cat:'O‘qish',done:false},
+ {id:'rest',name:'Tushlik va qisqa dam olish',time:'13:00',cat:'Dam olish',done:false},
+ {id:'learn',name:'Dasturlashni o‘rganish — 60 daqiqa',time:'15:00',cat:'Dasturlash',done:false},
+ {id:'practice',name:'Mustaqil kod yozish — 30 daqiqa',time:'16:15',cat:'Dasturlash',done:false},
+ {id:'cyber',name:'Kiberxavfsizlik yoki veb-amaliyot — 30 daqiqa',time:'17:00',cat:'Kiberxavfsizlik',done:false},
+ {id:'review',name:'Bugun o‘rganganlarimni qayd etish',time:'20:00',cat:'O‘qish',done:false}
+];
+const $=id=>document.getElementById(id);
+const todayKey=()=>new Date().toLocaleDateString('sv-SE');
+let tasks=loadTasks();
+let fired=new Set();
+function loadTasks(){
+ try{const d=localStorage.getItem('kunimTasks');const day=localStorage.getItem('kunimDay');if(day===todayKey()&&d)return JSON.parse(d);localStorage.setItem('kunimDay',todayKey());return defaultTasks.map(x=>({...x}));}
+ catch(e){return defaultTasks.map(x=>({...x}));}
+}
+function save(){localStorage.setItem('kunimTasks',JSON.stringify(tasks));localStorage.setItem('kunimDay',todayKey());}
+function render(){
+ const done=tasks.filter(t=>t.done).length;
+ $('progressText').textContent=`${done} / ${tasks.length} ta vazifa bajarildi`;
+ $('bar').style.width=(tasks.length?done/tasks.length*100:0)+'%';
+ $('tasks').innerHTML=tasks.length?'':'<div class="empty">Hozircha vazifa yo‘q. Yangi vazifa qo‘shishing mumkin.</div>';
+ tasks.sort((a,b)=>a.time.localeCompare(b.time));
+ $('tasks').innerHTML=tasks.map(t=>`<div class="task ${t.done?'done':''}">
+ <input type="checkbox" data-check="${t.id}" ${t.done?'checked':''} aria-label="Vazifa bajarildi">
+ <div class="taskmain"><div class="taskname">${esc(t.name)}</div><div class="time">${t.time} · ${esc(t.cat)}</div></div>
+ <button class="danger" data-delete="${t.id}" title="O‘chirish" aria-label="O‘chirish">×</button>
+ </div>`).join('');
+ document.querySelectorAll('[data-check]').forEach(el=>el.addEventListener('change',()=>{const t=tasks.find(x=>x.id===el.dataset.check);if(t)t.done=el.checked;save();render();}));
+ document.querySelectorAll('[data-delete]').forEach(el=>el.addEventListener('click',()=>{tasks=tasks.filter(x=>x.id!==el.dataset.delete);save();render();}));
+}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function updateDate(){$('today').textContent=new Date().toLocaleDateString('uz-UZ',{weekday:'long',year:'numeric',month:'long',day:'numeric'});}
+$('addForm').addEventListener('submit',e=>{e.preventDefault();tasks.push({id:'t'+Date.now(),name:$('taskName').value.trim(),time:$('taskTime').value,cat:$('category').value,done:false});save();render();e.target.reset();$('taskTime').value='16:00';});
+$('resetBtn').addEventListener('click',()=>{if(confirm('Bugungi vazifalarni boshlang‘ich holatga qaytaraymi?')){tasks=tasks.map(t=>({...t,done:false}));fired.clear();save();render();}});
+$('notifyBtn').addEventListener('click',async()=>{
+ if(!('Notification' in window)){$('notice').textContent='Bu brauzer bildirishnomalarni qo‘llab-quvvatlamaydi. Telefon budilnigidan foydalanishing mumkin.';return;}
+ const permission=await Notification.requestPermission();
+ $('notice').textContent=permission==='granted'?'Bildirishnomalar yoqildi. Eslatmalar uchun sahifani ochiq qoldir va telefoningda bildirishnomalarga ruxsat ber.':'Ruxsat berilmadi. Brauzer sozlamalaridan bildirishnomalarga ruxsat ber.';
+});
+function checkReminders(){
+ const now=new Date();const hh=String(now.getHours()).padStart(2,'0'),mm=String(now.getMinutes()).padStart(2,'0');const stamp=todayKey()+' '+hh+':'+mm;
+ if('Notification' in window && Notification.permission==='granted'){
+  tasks.forEach(t=>{const k=stamp+' '+t.id;if(t.time===hh+':'+mm&&!t.done&&!fired.has(k)){new Notification('Kunim — eslatma',{body:t.name,tag:k});fired.add(k);}});
+ }
+}
+updateDate();render();setInterval(checkReminders,15000);
+</script>
+</body>
+</html>
